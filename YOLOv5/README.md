@@ -6,9 +6,9 @@ Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/y
 $ pip install -r requirements.txt
 ```
 ## detect
-
+```bash
 $ python detect.py --source data/images.dogs --weights best.pt --conf 0.25
-
+```
 ## save directory
 
 runs/detect/
