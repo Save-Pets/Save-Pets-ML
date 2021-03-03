@@ -7,7 +7,7 @@ $ pip install -r requirements.txt
 ```
 ## detect
 ```bash
-$ python detect.py --source data/images.dogs --weights best.pt --conf 0.25
+$ python detect.py --source data/images/dogs --weights best.pt --conf 0.25
 ```
 
 ## Inference
