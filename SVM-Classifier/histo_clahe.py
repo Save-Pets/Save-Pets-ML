@@ -6,6 +6,7 @@ def histo_clahe(img_dir):
     img = cv2.imread(img_dir)
     height, width, channel = img.shape
 
+    #사이즈가 너무 크면 반으로 줄인다. 인스타 이미지 사이즈 640x640
     while height >= 600 or width >=600:
         img = cv2.resize(img,(int(width / 2), int(height / 2)))
         height, width, channel = img.shape

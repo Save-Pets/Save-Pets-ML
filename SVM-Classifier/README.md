@@ -17,8 +17,9 @@ $ python Classifier.py --test test_0.jpg --dir Dog-Data
 ```
 
 # Data Preprocess and augmentation
- - 데이터 이미지를 정규화한다. (preprocessing)
- - 정규화한 데이터 사이즈를 1/2, 1/3, 1/4 로 줄이고 저장한다. (data augmentation)
+ - 데이터 이미지를 평탄화한다. (preprocessing)
+ - 평탄화한 데이터를 15,30,-15,-30도로 회전시켜 저장한다.(data augmentation)
+ - 평탄화한 데이터 사이즈를 1/2 로 줄이고 저장한다. (data augmentation)
 
 # 사용법
 - 테스트할 데이터를 /image 디렉토리에 넣고 디렉토리이름을 매개변수로 넣어서 실행
