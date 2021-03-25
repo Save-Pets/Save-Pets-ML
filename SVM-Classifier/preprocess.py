@@ -14,6 +14,8 @@ opt = parser.parse_args()
 path = './image/' + opt.dir
 file_list = os.listdir(path)
 
+rotate = [0, 15, 30, -15, -30]
+
 def createFolder(directory):
     try:
         if not os.path.exists(directory):
@@ -24,20 +26,25 @@ def createFolder(directory):
 
 for file in file_list:
     s = os.path.splitext(file)
-    savedir = ['0']
+    savedir = []
     createFolder(opt.savedir + '/' + opt.dir)
-    for i in range(1,5):
+    for i in range(10):
         savedir.append(opt.savedir + '/' + opt.dir + '/' + s[0] + '-' + str(i) + s[1])
 
     img = histo_clahe(path + '/' + file)
-    cv2.imwrite(savedir[1],img) 
+    height, width, channel = img.shape
 
-    width = img_clahe_save.shape[1]
-    height = img_clahe_save.shape[0]
+    for i in range(5):
+        matrix = cv2.getRotationMatrix2D((width/2, height/2), rotate[i], 1)
+        dst = cv2.warpAffine(img, matrix, (width, height))
+        cv2.imwrite(savedir[i],dst)
 
-    img_resize = cv2.resize(img,(int(width / 2), int(height / 2))) 
-    cv2.imwrite(savedir[2],img_resize)
-    img_resize = cv2.resize(img,(int(width / 3), int(height / 3))) 
-    cv2.imwrite(savedir[3],img_resize)
-    img_resize = cv2.resize(img,(int(width / 4), int(height / 4))) 
-    cv2.imwrite(savedir[4],img_resize)
+    #사이즈 1/2
+    img = cv2.resize(img,(int(width / 2), int(height / 2)))
+    height, width, channel = img.shape
+    
+    for i in range(5):
+        matrix = cv2.getRotationMatrix2D((width/2, height/2), rotate[i], 1)
+        dst = cv2.warpAffine(img, matrix, (width, height))
+        cv2.imwrite(savedir[i+5],dst)
+
