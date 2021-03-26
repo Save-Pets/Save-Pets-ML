@@ -145,8 +145,7 @@ def main():
     print("SVM Score: ", svm.score(X_test, Y_test))
     print("KNN Score: ", knn.score(X_test, Y_test))
 
-    print("실행시간: ", round(time.time() - start, 2))
-
+    print("running time: ", round(time.time() - start, 2))
 
 if __name__ == "__main__":
     main()
