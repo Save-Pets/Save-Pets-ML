@@ -32,11 +32,15 @@ def read_data(label2id):
 # feature exraction with SIFT
 def extract_sift_features(X):
     image_descriptors = []
-    sift = cv2.xfeatures2d.SIFT_create()
+    sift = cv2.xfeatures2d.SIFT_create(nfeatures =1000, nOctaveLayers =3, contrastThreshold=0.01)
 
     for i in range(len(X)):
         kp, des = sift.detectAndCompute(X[i], None)
         image_descriptors.append(des)
+
+        if i == 0:
+            img_draw = cv2.drawKeypoints(X[i], kp, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+            cv2.imwrite('./1.jpg', img_draw)
 
     return image_descriptors
 
