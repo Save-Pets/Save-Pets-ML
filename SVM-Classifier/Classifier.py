@@ -32,15 +32,11 @@ def read_data(label2id):
 # feature exraction with SIFT
 def extract_sift_features(X):
     image_descriptors = []
-    sift = cv2.xfeatures2d.SIFT_create(nfeatures =1000, nOctaveLayers =3, contrastThreshold=0.01)
+    sift = cv2.xfeatures2d.SIFT_create(nfeatures =200, nOctaveLayers =3, contrastThreshold=0.0005)
 
     for i in range(len(X)):
         kp, des = sift.detectAndCompute(X[i], None)
         image_descriptors.append(des)
-
-        if i == 0:
-            img_draw = cv2.drawKeypoints(X[i], kp, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-            cv2.imwrite('./1.jpg', img_draw)
 
     return image_descriptors
 
@@ -103,7 +99,7 @@ def main():
     X_train, X_test, Y_train, Y_test = train_test_split(X_features, Y, test_size=0.2, random_state=42, shuffle=True)
 
     #Train SVM
-    svm = sklearn.svm.SVC(C = 100)
+    svm = sklearn.svm.SVC(C = 100, probability=True)
     svm.fit(X_train, Y_train)
 
     #Train KNN
@@ -116,20 +112,34 @@ def main():
     img = [img_test]
     img_sift_feature = extract_sift_features(img)
     img_bow_feature = create_features_bow(img_sift_feature, BoW, num_clusters)
+
+    #---------------------------------
+    #-----------evaluation------------
+    #---------------------------------
+
     #predict SVM
     img_predict = svm.predict(img_bow_feature)
-
     #predict KNN
     img_predict2 = knn.predict(img_bow_feature)
 
     #prediction probability
-    print("probability: ", knn.predict_proba(img_bow_feature))
+    svm_prob = svm.predict_proba(img_bow_feature)[0][img_predict[0]]
+    knn_prob = knn.predict_proba(img_bow_feature)[0][img_predict2[0]]
 
+    print("SVM prob: ", svm.predict_proba(img_bow_feature))
+    print("KNN prob: ", knn.predict_proba(img_bow_feature))
+    
     for key, value in label2id.items():
         if value == img_predict[0]:
-            print('SVM prediction: ', key)
+            svm_k = key
         if value == img_predict2[0]:
-            print('KNN prediction: ', key)
+            knn_k = key
+            
+    print('SVM prediction: ', svm_k)
+    print('KNN prediction: ', knn_k)
+
+    if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k:
+        print("\n **등록이 안된 강아지입니다. 등록해주세요** \n")
 
     #Accuracy
     print("SVM Score: ", svm.score(X_test, Y_test))
