@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+
 import pickle
 import sklearn
 import argparse
@@ -23,9 +23,9 @@ def read_data(label2id):
     X = []
     Y = []
     for label in os.listdir(opt.dir + '/train'):
-        if os.path.isdir( os.path.join(opt.dir + '/train', label)):
+        if os.path.isdir(os.path.join(opt.dir + '/train', label)):
             for img_file in os.listdir(os.path.join(opt.dir + '/train', label)):
-                img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))            
+                img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))
                 X.append(img)
                 Y.append(label2id[label])
     return X, Y
@@ -127,26 +127,38 @@ def main():
     svm_prob = svm.predict_proba(img_bow_feature)[0][img_predict[0]]
     knn_prob = knn.predict_proba(img_bow_feature)[0][img_predict2[0]]
 
-    print("SVM prob: ", svm.predict_proba(img_bow_feature))
-    print("KNN prob: ", knn.predict_proba(img_bow_feature))
+    # print("SVM prob: ", svm.predict_proba(img_bow_feature))
+    # print("KNN prob: ", knn.predict_proba(img_bow_feature))
     
     for key, value in label2id.items():
         if value == img_predict[0]:
             svm_k = key
         if value == img_predict2[0]:
             knn_k = key
-            
-    print('SVM prediction: ', svm_k)
-    print('KNN prediction: ', knn_k)
+
+    result =""
+    if svm_k==knn_k:
+        result = result+svm_k+","
+    else:
+        result = result+"a,"
+    # result = result+"202151796꿍1234"+","
+    # result =result+"등록된강아지"+","
 
     if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k:
-        print("\n **등록이 안된 강아지입니다. 등록해주세요** \n")
-
+        result = result+"미등록강아지"+","
+    else:
+        result = result+"등록된강아지"+","
     #Accuracy
-    print("SVM Score: ", svm.score(X_test, Y_test))
-    print("KNN Score: ", knn.score(X_test, Y_test))
-    #runnig time
-    print("running time: ", round(time.time() - start, 2))
+    if svm.score(X_test,Y_test) > knn.score(X_test,Y_test):
+        result = result+str(svm.score(X_test,Y_test))
+    else :
+        result = result+str(knn.score(X_test,Y_test))
+        
+    # print("SVM Score: ", svm.score(X_test, Y_test))
+    # print("KNN Score: ", knn.score(X_test, Y_test))
+    # print("running time: ", round(time.time() - start, 2))
+
+    print(result)
 
 if __name__ == "__main__":
     main()
