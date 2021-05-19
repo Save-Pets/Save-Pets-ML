@@ -23,10 +23,11 @@ def read_data(label2id):
     X = []
     Y = []
     for label in os.listdir(opt.dir + '/train'):
-        for img_file in os.listdir(os.path.join(opt.dir + '/train', label)):
-            img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))            
-            X.append(img)
-            Y.append(label2id[label])
+        if os.path.isdir( os.path.join(opt.dir + '/train', label)):
+            for img_file in os.listdir(os.path.join(opt.dir + '/train', label)):
+                img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))            
+                X.append(img)
+                Y.append(label2id[label])
     return X, Y
 
 # feature exraction with SIFT
@@ -144,7 +145,7 @@ def main():
     #Accuracy
     print("SVM Score: ", svm.score(X_test, Y_test))
     print("KNN Score: ", knn.score(X_test, Y_test))
-
+    #runnig time
     print("running time: ", round(time.time() - start, 2))
 
 if __name__ == "__main__":
