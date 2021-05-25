@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+
 import pickle
 import sklearn
 import argparse
@@ -23,9 +23,9 @@ def read_data(label2id):
     X = []
     Y = []
     for label in os.listdir(opt.dir + '/train'):
-        if os.path.isdir( os.path.join(opt.dir + '/train', label)):
+        if os.path.isdir(os.path.join(opt.dir + '/train', label)):
             for img_file in os.listdir(os.path.join(opt.dir + '/train', label)):
-                img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))            
+                img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))
                 X.append(img)
                 Y.append(label2id[label])
     return X, Y
@@ -68,8 +68,12 @@ def main():
     path = opt.dir + "/train"
     file_list = os.listdir(path)
     label2id = {}
+    idx = 0
     for i, label in enumerate(file_list):
-        label2id[label] = i
+        if label == ".DS_Store": 
+            continue;
+        label2id[label] = idx
+        idx += 1
     X, Y = read_data(label2id)
 
     image_descriptors = extract_sift_features(X)
@@ -119,34 +123,51 @@ def main():
     #---------------------------------
 
     #predict SVM
-    img_predict = svm.predict(img_bow_feature)
+    svm_pclass = svm.predict(img_bow_feature)
     #predict KNN
-    img_predict2 = knn.predict(img_bow_feature)
+    knn_pclass = knn.predict(img_bow_feature)
 
     #prediction probability
-    svm_prob = svm.predict_proba(img_bow_feature)[0][img_predict[0]]
-    knn_prob = knn.predict_proba(img_bow_feature)[0][img_predict2[0]]
+    svm_prob = svm.predict_proba(img_bow_feature)[0][svm_pclass[0]]
+    knn_prob = knn.predict_proba(img_bow_feature)[0][knn_pclass[0]]
 
-    print("SVM prob: ", svm.predict_proba(img_bow_feature))
-    print("KNN prob: ", knn.predict_proba(img_bow_feature))
-    
+    #print("SVM prob: ", svm.predict_proba(img_bow_feature))
+    #print("KNN prob: ", knn.predict_proba(img_bow_feature))
+    #print(svm_pclass ,svm_prob)
+    #print(knn_pclass ,knn_prob)
+
     for key, value in label2id.items():
-        if value == img_predict[0]:
+        if value == svm_pclass[0]:
             svm_k = key
-        if value == img_predict2[0]:
+        if value == knn_pclass[0]:
             knn_k = key
-            
-    print('SVM prediction: ', svm_k)
-    print('KNN prediction: ', knn_k)
+
+    result =""
+    if svm_k==knn_k:
+        result = result+svm_k+","
+    else:
+        result = result+"a,"
+    #result = result+"202151796꿍1234"+","
+    #result =result+"등록된강아지"+","
 
     if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k:
-        print("\n **등록이 안된 강아지입니다. 등록해주세요** \n")
-
+        result = result+"미등록강아지"+","
+    else:
+        result = result+"등록된강아지"+","
+    
+    svm_prob = round(svm_prob*100,2)
+    knn_prob = round(knn_prob*100,2)
     #Accuracy
-    print("SVM Score: ", svm.score(X_test, Y_test))
-    print("KNN Score: ", knn.score(X_test, Y_test))
-    #runnig time
-    print("running time: ", round(time.time() - start, 2))
+    if svm_prob > knn_prob:
+        result = result+str(svm_prob)
+    else :
+        result = result+str(knn_prob)
+
+    print(result)
+        
+    #print("SVM Score: ", svm.score(X_test, Y_test))
+    #print("KNN Score: ", knn.score(X_test, Y_test))
+    #print("running time: ", round(time.time() - start, 2))
 
 if __name__ == "__main__":
     main()
