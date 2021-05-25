@@ -150,7 +150,8 @@ def main():
     #result = result+"202151796꿍1234"+","
     #result =result+"등록된강아지"+","
 
-    if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k:
+    #미등록 강아지 예외처리
+    if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k or knn_k == '4' or knn_k == '5':
         result = result+"미등록강아지"+","
     else:
         result = result+"등록된강아지"+","
