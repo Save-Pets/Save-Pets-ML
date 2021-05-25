@@ -155,8 +155,8 @@ def main():
     else:
         result = result+"등록된강아지"+","
     
-    svm_prob = round(svm_prob*100,2)
-    knn_prob = round(knn_prob*100,2)
+    svm_prob = round(svm_prob,4)
+    knn_prob = round(knn_prob,4)
     #Accuracy
     if svm_prob > knn_prob:
         result = result+str(svm_prob)
