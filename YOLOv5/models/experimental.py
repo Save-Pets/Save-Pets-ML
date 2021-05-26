@@ -130,4 +130,5 @@ def attempt_load(weights, map_location=None):
         print('Ensemble created with %s\n' % weights)
         for k in ['names', 'stride']:
             setattr(model, k, getattr(model[-1], k))
+
         return model  # return ensemble

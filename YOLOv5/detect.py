@@ -31,6 +31,8 @@ def detect(save_img=False):
 
     # Load model
     model = attempt_load(weights, map_location=device)  # load FP32 model
+    
+
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
     if half:
@@ -108,7 +110,7 @@ def detect(save_img=False):
                     if int(cls) == 0: # cut
                         y0, x0, y1, x1 = int(xyxy[0]),int(xyxy[1]),int(xyxy[2]),int(xyxy[3])
                         dst = im1[x0:x1, y0:y1]
-                        save_path2 = str(save_dir) +'\cut_'+ str(p.name)
+                        save_path2 = '../SVM-Classifier/image/' + opt.source.split('/')[3] + '/' + str(p.name) #str(save_dir) +'/cut_'+ str(p.name)
                         cv2.imwrite(save_path2,dst)
 
                     if save_txt:  # Write to file
@@ -134,7 +136,7 @@ def detect(save_img=False):
             # Save results (image with detections)
             if save_img:
                 if dataset.mode == 'image':
-                    cv2.imwrite(save_path, im0)
+                    0 # cv2.imwrite(save_path, im0)
                 else:  # 'video'
                     if vid_path != save_path:  # new video
                         vid_path = save_path
