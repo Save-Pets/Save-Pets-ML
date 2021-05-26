@@ -110,7 +110,7 @@ def detect(save_img=False):
                     if int(cls) == 0: # cut
                         y0, x0, y1, x1 = int(xyxy[0]),int(xyxy[1]),int(xyxy[2]),int(xyxy[3])
                         dst = im1[x0:x1, y0:y1]
-                        save_path2 = '../SVM-Classifier/image/' + opt.source.split('/')[3] + '/' + str(p.name) #str(save_dir) +'/cut_'+ str(p.name)
+                        save_path2 = '../SVM-Classifier/image/' + opt.source.split('/')[1] + '/' + str(p.name) #str(save_dir) +'/cut_'+ str(p.name)
                         cv2.imwrite(save_path2,dst)
 
                     if save_txt:  # Write to file
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     opt = parser.parse_args()
     print(opt)
-    check_requirements()
+    #check_requirements()
 
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
