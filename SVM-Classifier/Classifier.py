@@ -68,8 +68,12 @@ def main():
     path = opt.dir + "/train"
     file_list = os.listdir(path)
     label2id = {}
+    idx = 0
     for i, label in enumerate(file_list):
-        label2id[label] = i
+        if label == ".DS_Store": 
+            continue;
+        label2id[label] = idx
+        idx += 1
     X, Y = read_data(label2id)
 
     image_descriptors = extract_sift_features(X)
@@ -119,21 +123,23 @@ def main():
     #---------------------------------
 
     #predict SVM
-    img_predict = svm.predict(img_bow_feature)
+    svm_pclass = svm.predict(img_bow_feature)
     #predict KNN
-    img_predict2 = knn.predict(img_bow_feature)
+    knn_pclass = knn.predict(img_bow_feature)
 
     #prediction probability
-    svm_prob = svm.predict_proba(img_bow_feature)[0][img_predict[0]]
-    knn_prob = knn.predict_proba(img_bow_feature)[0][img_predict2[0]]
+    svm_prob = svm.predict_proba(img_bow_feature)[0][svm_pclass[0]]
+    knn_prob = knn.predict_proba(img_bow_feature)[0][knn_pclass[0]]
 
-    # print("SVM prob: ", svm.predict_proba(img_bow_feature))
-    # print("KNN prob: ", knn.predict_proba(img_bow_feature))
-    
+    #print("SVM prob: ", svm.predict_proba(img_bow_feature))
+    #print("KNN prob: ", knn.predict_proba(img_bow_feature))
+    #print(svm_pclass ,svm_prob)
+    #print(knn_pclass ,knn_prob)
+
     for key, value in label2id.items():
-        if value == img_predict[0]:
+        if value == svm_pclass[0]:
             svm_k = key
-        if value == img_predict2[0]:
+        if value == knn_pclass[0]:
             knn_k = key
 
     result =""
@@ -141,24 +147,28 @@ def main():
         result = result+svm_k+","
     else:
         result = result+"a,"
-    # result = result+"202151796꿍1234"+","
-    # result =result+"등록된강아지"+","
+    #result = result+"202151796꿍1234"+","
+    #result =result+"등록된강아지"+","
 
-    if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k:
+    #미등록 강아지 예외처리
+    if (svm_prob < 0.65 and knn_prob < 0.55) or svm_k != knn_k or knn_k == '4' or knn_k == '5':
         result = result+"미등록강아지"+","
     else:
         result = result+"등록된강아지"+","
+    
+    svm_prob = round(svm_prob,4)
+    knn_prob = round(knn_prob,4)
     #Accuracy
-    if svm.score(X_test,Y_test) > knn.score(X_test,Y_test):
-        result = result+str(svm.score(X_test,Y_test))
+    if svm_prob > knn_prob:
+        result = result+str(svm_prob)
     else :
-        result = result+str(knn.score(X_test,Y_test))
-        
-    # print("SVM Score: ", svm.score(X_test, Y_test))
-    # print("KNN Score: ", knn.score(X_test, Y_test))
-    # print("running time: ", round(time.time() - start, 2))
+        result = result+str(knn_prob)
 
     print(result)
+        
+    #print("SVM Score: ", svm.score(X_test, Y_test))
+    #print("KNN Score: ", knn.score(X_test, Y_test))
+    #print("running time: ", round(time.time() - start, 2))
 
 if __name__ == "__main__":
     main()

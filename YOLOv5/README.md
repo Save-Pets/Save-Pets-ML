@@ -7,7 +7,7 @@ $ pip install -r requirements.txt
 ```
 ## detect
 ```bash
-$ python detect.py --source data/images/dogs --weights best.pt --conf 0.25
+$ python ../YOLOv5/detect.py --source rawimage/6  --weights ../YOLOv5/best.pt --conf 0.25
 ```
 
 ## Inference
