@@ -110,7 +110,10 @@ def detect(save_img=False):
                     if int(cls) == 0: # cut
                         y0, x0, y1, x1 = int(xyxy[0]),int(xyxy[1]),int(xyxy[2]),int(xyxy[3])
                         dst = im1[x0:x1, y0:y1]
-                        save_path2 = '../SVM-Classifier/image/' + opt.source.split('/')[1] + '/' + str(p.name) #str(save_dir) +'/cut_'+ str(p.name)
+                        if opt.option == 'register':
+                            save_path2 = '../SVM-Classifier/image/' + opt.source.split('/')[3] + '/' + str(p.name) #str(save_dir) +'/cut_'+ str(p.name)
+                        elif opt.option == 'test':
+                            save_path2 = '../SVM-Classifier/Dog-Data/test/' + str(p.name)
                         cv2.imwrite(save_path2,dst)
 
                     if save_txt:  # Write to file
@@ -175,6 +178,7 @@ if __name__ == '__main__':
     parser.add_argument('--project', default='runs/detect', help='save results to project/name')
     parser.add_argument('--name', default='exp', help='save results to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
+    parser.add_argument('--option', type=str, default='register', help='register or test')
     opt = parser.parse_args()
     print(opt)
     #check_requirements()

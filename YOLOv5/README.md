@@ -7,7 +7,8 @@ $ pip install -r requirements.txt
 ```
 ## detect
 ```bash
-$ python ../YOLOv5/detect.py --source rawimage/6  --weights ../YOLOv5/best.pt --conf 0.25
+$ python ../YOLOv5/detect.py --source ../SVM-Classifier/rawimage/6  --weights ../YOLOv5/best.pt --option register --conf 0.25
+$ python ../YOLOv5/detect.py --source ../SVM-Classifier/testimage/6.jpg  --weights ../YOLOv5/best.pt --option test --conf 0.25
 ```
 
 ## Inference
