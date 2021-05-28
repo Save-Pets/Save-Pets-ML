@@ -22,10 +22,10 @@ opt = parser.parse_args()
 def read_data(label2id):
     X = []
     Y = []
-    for label in os.listdir(opt.dir + '/train'):
-        if os.path.isdir(os.path.join(opt.dir + '/train', label)):
-            for img_file in os.listdir(os.path.join(opt.dir + '/train', label)):
-                img = cv2.imread(os.path.join(opt.dir + '/train', label, img_file))
+    for label in os.listdir('Dog-Data/train'):
+        if os.path.isdir(os.path.join('Dog-Data/train', label)):
+            for img_file in os.listdir(os.path.join('Dog-Data/train', label)):
+                img = cv2.imread(os.path.join('Dog-Data/train', label, img_file))
                 X.append(img)
                 Y.append(label2id[label])
     return X, Y
@@ -65,7 +65,7 @@ def create_features_bow(image_descriptors, BoW, num_clusters):
 def main():
     start = time.time()
     # Label to id
-    path = opt.dir + "/train"
+    path = "Dog-Data/train"
     file_list = os.listdir(path)
     label2id = {}
     for i, label in enumerate(file_list):
@@ -84,11 +84,11 @@ def main():
 
     num_clusters = 100
 
-    if not os.path.isfile(opt.dir + '/bow.pkl'):
+    if not os.path.isfile('Dog-Data/bow.pkl'):
         BoW = kmeans_bow(all_descriptors, num_clusters)
-        pickle.dump(BoW, open(opt.dir + '/bow.pkl', 'wb'))
+        pickle.dump(BoW, open('Dog-Data/bow.pkl', 'wb'))
     else:
-        BoW = pickle.load(open(opt.dir + '/bow.pkl', 'rb'))
+        BoW = pickle.load(open('Dog-Data/bow.pkl', 'rb'))
 
     X_features = create_features_bow(image_descriptors, BoW, num_clusters)
 
@@ -109,7 +109,8 @@ def main():
 
     #predict
     #img_test = cv2.imread(opt.dir + '/test/' + opt.test)
-    img_test = histo_clahe(opt.dir + '/test/' + opt.test)
+    img_test = histo_clahe('Dog-Data/test/' + opt.test)
+
     img = [img_test]
     img_sift_feature = extract_sift_features(img)
     img_bow_feature = create_features_bow(img_sift_feature, BoW, num_clusters)
