@@ -13,7 +13,6 @@
 ### 3. 주요 기술 및 설명
 
 #### [Client]
-</br>
 * **iOS**
   * UIKit
   * GCD (DispatchSemaphore)
