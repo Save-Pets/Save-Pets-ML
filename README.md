@@ -8,7 +8,7 @@
 
 ### 2. 서비스 소개
 
-![savepets_main](https://user-images.githubusercontent.com/20268101/120218227-60258a80-c274-11eb-8f81-2abcfc561f43.png)
+![savepets_main](https://user-images.githubusercontent.com/39593640/121806381-8f7fc280-cc8a-11eb-89ed-73bac2d1fc98.jpg)
 
 ### 3. 주요 기술 및 설명
 
