@@ -103,7 +103,7 @@ CLAHE를 적용 후 이미지
 
 Scikit leran의 SVM을 이용하여 분류하였습니다. 
 
-
+</br>
 
 
 
